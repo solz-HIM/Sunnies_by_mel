@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Pure Dark Mode System */
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+    
+    --card: 224 71% 7%;
+    --card-foreground: 213 31% 91%;
+    
+    --popover: 224 71% 7%;
+    --popover-foreground: 213 31% 91%;
+    
+    /* Warm Amber/Orange Accent */
+    --primary: 32 95% 54%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 216 34% 17%;
+    --secondary-foreground: 213 31% 91%;
+    
+    --muted: 216 34% 17%;
+    --muted-foreground: 215 20.2% 65.1%;
+    
+    --accent: 32 95% 54%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 213 31% 91%;
+    
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    --ring: 32 95% 54%;
+    
+    --radius: 0.75rem;
+  }
+
+  /* Force .dark to use the same to prevent any system overrides */
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+    --card: 224 71% 7%;
+    --card-foreground: 213 31% 91%;
+    --popover: 224 71% 7%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 32 95% 54%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 216 34% 17%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 216 34% 17%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 32 95% 54%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 213 31% 91%;
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    --ring: 32 95% 54%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Force dark color scheme at OS level */
+    color-scheme: dark; 
+  }
+
+  body {
+    @apply bg-background text-foreground transition-all duration-300 ease-out antialiased;
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+    text-wrap: balance;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .scroll-fade-in {
+    @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+  }
+  
+  .scroll-fade-in.is-visible {
+    @apply opacity-100 translate-y-0;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10;
+  }
+
+  .parallax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  /* Stagger Delays */
+  .stagger-delay-100 { animation-delay: 100ms; }
+  .stagger-delay-200 { animation-delay: 200ms; }
+  .stagger-delay-300 { animation-delay: 300ms; }
+  .stagger-delay-400 { animation-delay: 400ms; }
+  .stagger-delay-500 { animation-delay: 500ms; }
+}
