@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Mail } from "lucide-react";
 
 function InstagramIcon({ className }: { className?: string }) {
@@ -83,18 +84,12 @@ export default function Footer() {
             © {currentYear} Sunnies by Mel. All rights reserved.
           </p>
           <div className="flex space-x-6 text-sm">
-            <a
-              href="#"
-              className="hover:text-primary transition-colors duration-200"
-            >
+            <Link href="/privacy" className="hover:text-primary transition-colors duration-200">
               Privacy Policy
-            </a>
-            <a
-              href="#"
-              className="hover:text-primary transition-colors duration-200"
-            >
+            </Link>
+            <Link href="/terms" className="hover:text-primary transition-colors duration-200">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>

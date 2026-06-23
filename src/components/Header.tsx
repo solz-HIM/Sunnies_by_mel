@@ -29,7 +29,7 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-primary/50 shadow-lg group-hover:shadow-xl group-hover:border-primary transition-all duration-300 flex-shrink-0">
               <img
-                src="/profile%20pic.png"
+                src="/profile-pic.png"
                 alt="Sunnies by Mel"
                 className="w-full h-full object-cover"
               />

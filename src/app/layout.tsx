@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     description:
       "Shop premium sunglasses, blue-light glasses, and accessories at Sunnies by Mel. Bold styles, great prices. Order via WhatsApp.",
     siteName: "Sunnies by Mel",
-    images: [{ url: "/profile%20pic.png", width: 400, height: 400, alt: "Sunnies by Mel" }],
+    images: [{ url: "/profile-pic.png", width: 400, height: 400, alt: "Sunnies by Mel" }],
     type: "website",
   },
   twitter: {
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: "Sunnies by Mel - Premium Eyewear & Accessories",
     description:
       "Shop premium sunglasses, blue-light glasses, and accessories at Sunnies by Mel.",
-    images: ["/profile%20pic.png"],
+    images: ["/profile-pic.png"],
   },
 };
 
