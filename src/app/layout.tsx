@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
   description:
     "Shop premium sunglasses, blue-light glasses, and accessories at Sunnies by Mel. Bold styles, great prices. Order via WhatsApp.",
   metadataBase: new URL("https://sunniesbymel.co.zw"),
+  alternates: { canonical: "https://sunniesbymel.co.zw" },
   openGraph: {
     title: "Sunnies by Mel - Premium Eyewear & Accessories",
     description:
@@ -33,7 +35,7 @@ export const metadata: Metadata = {
     type: "website",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Sunnies by Mel - Premium Eyewear & Accessories",
     description:
       "Shop premium sunglasses, blue-light glasses, and accessories at Sunnies by Mel.",
@@ -50,6 +52,7 @@ export default function RootLayout({
       className={`${outfit.variable} ${dmSans.variable} dark`}
     >
       <body className="min-h-screen flex flex-col">
+        <LocalBusinessSchema />
         <Providers>
           <Header />
           <main className="flex-1">{children}</main>
