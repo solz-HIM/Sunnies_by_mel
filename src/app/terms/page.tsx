@@ -68,24 +68,16 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">6. Returns and refunds</h2>
-            <ul className="list-disc list-inside space-y-2">
-              <li>
-                Items may be exchanged within <strong className="text-foreground">7 days</strong>{" "}
-                of receipt, provided they are unused, unworn, and in original condition.
-              </li>
-              <li>
-                Refunds are issued at our discretion. Where a refund is approved, it will be
-                processed within 7 business days using the original payment method.
-              </li>
-              <li>
-                We do not accept returns on items that have been worn, damaged after receipt, or
-                are missing original packaging.
-              </li>
-              <li>
-                If you receive a defective or incorrect item, contact us within 48 hours of
-                receipt via WhatsApp with photos of the issue.
-              </li>
-            </ul>
+            <p>
+              All sales are <strong className="text-foreground">final</strong>. Sunnies by Mel
+              does not offer returns or refunds. Please review your order carefully before
+              confirming. If you have any questions about a product prior to purchasing, contact
+              us via WhatsApp at{" "}
+              <a href="https://wa.me/263783180745" className="text-primary hover:underline">
+                +263 78 318 0745
+              </a>{" "}
+              before placing your order.
+            </p>
           </section>
 
           <section>
