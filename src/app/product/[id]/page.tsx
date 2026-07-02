@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { getAllProducts, getProductById } from "@/lib/products";
 import ProductSchema from "@/components/ProductSchema";
+import ProductImageGallery from "@/components/ProductImageGallery";
 
 const BASE = "https://sunniesbymel.co.zw";
 const WA = "263783180745";
@@ -65,12 +65,9 @@ export default async function ProductPage({
         </Link>
         <div className="grid md:grid-cols-2 gap-10 mt-6">
           <div className="relative aspect-square rounded-xl overflow-hidden bg-card">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width:768px) 100vw, 50vw"
+            <ProductImageGallery
+              images={product.images?.length ? product.images : [product.image]}
+              productName={product.name}
             />
           </div>
           <div>

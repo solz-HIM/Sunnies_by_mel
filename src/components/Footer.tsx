@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { Mail, ExternalLink } from "lucide-react";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -91,6 +91,18 @@ export default function Footer() {
               Terms of Service
             </Link>
           </div>
+        </div>
+
+        <div className="border-t border-border/30 mt-6 pt-6 text-center">
+          <a
+            href="https://solzdesigns.co.zw"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/60 hover:text-primary transition-colors duration-200"
+          >
+            Website designed by Solz Designs
+            <ExternalLink className="h-3 w-3" />
+          </a>
         </div>
       </div>
     </footer>
