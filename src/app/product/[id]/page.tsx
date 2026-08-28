@@ -91,6 +91,7 @@ export default async function ProductPage({
                 images={images}
                 productName={product.name}
                 altContext={`— ${copy.productType} at Sunnies by Mel, Harare`}
+                sizes="(max-width: 768px) 92vw, 46vw"
                 priority
               />
             </div>

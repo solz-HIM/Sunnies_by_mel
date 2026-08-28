@@ -1,32 +1,31 @@
-"use client";
-
-import { motion } from "framer-motion";
-
 /**
- * Thin client wrapper for scroll-reveal animation so page shells can stay
- * Server Components — content ships in the initial HTML for Googlebot while
- * the motion layer hydrates on top.
+ * Scroll-reveal wrapper.
+ *
+ * Deliberately not a Client Component and deliberately not JavaScript-driven.
+ * It was a framer-motion `whileInView`, which pulled the animation library into
+ * the critical path of every page that used it. This version is a plain CSS
+ * class using a scroll-driven `animation-timeline`.
+ *
+ * The important property: content is never hidden waiting for script. Browsers
+ * without scroll-driven animation support (Firefox today) simply render it
+ * visible and unanimated, which is also what a crawler or a no-JS visitor sees.
  */
 export default function Reveal({
   children,
   delay = 0,
   className,
-  as = "div",
+  as: Component = "div",
 }: {
   children: React.ReactNode;
+  /** Stagger, in seconds. Applied as an animation-range offset. */
   delay?: number;
   className?: string;
   as?: "div" | "section";
 }) {
-  const Component = as === "section" ? motion.section : motion.div;
-
   return (
     <Component
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.7, delay, ease: "easeOut" }}
-      className={className}
+      className={`reveal-on-scroll ${className ?? ""}`}
+      style={delay ? { animationDelay: `${delay}s` } : undefined}
     >
       {children}
     </Component>

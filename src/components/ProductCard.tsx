@@ -1,12 +1,22 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ShoppingCart, Plus, Images } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductImageGallery from "./ProductImageGallery";
-import ProductDetailModal from "./ProductDetailModal";
 import type { Product } from "@/lib/products";
+
+/**
+ * The detail modal (and the framer-motion it uses) is only needed once a
+ * shopper actually opens a card. Loading it on demand keeps the animation
+ * library out of the initial bundle for the catalogue pages, which render up to
+ * 50 of these cards at once.
+ */
+const ProductDetailModal = dynamic(() => import("./ProductDetailModal"), {
+  ssr: false,
+});
 
 interface ProductCardProps {
   product: Product;

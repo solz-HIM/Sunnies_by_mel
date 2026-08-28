@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,19 +13,26 @@ interface ProductImageGalleryProps {
   altContext?: string;
   /** Eager-load the first frame when this gallery is the page's LCP element. */
   priority?: boolean;
+  /**
+   * Rendered width of the gallery, for the responsive srcset. Defaults to the
+   * catalogue-grid case; product pages pass their own larger value.
+   */
+  sizes?: string;
 }
 
-const slideVariants = {
-  enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%", opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (dir: number) => ({ x: dir < 0 ? "100%" : "-100%", opacity: 0 }),
-};
+/**
+ * The slide used to be a framer-motion AnimatePresence. This component renders
+ * once per product card, so a catalogue page mounted 50 motion trees and had to
+ * download the whole animation library before it could become interactive. A
+ * CSS keyframe keyed on the image index gives the same effect for no JS.
+ */
 
 export default function ProductImageGallery({
   images = [],
   productName = "Product",
   altContext = "at Sunnies by Mel, Harare",
   priority = false,
+  sizes = "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, (max-width: 1280px) 31vw, 23vw",
 }: ProductImageGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -86,30 +93,26 @@ export default function ProductImageGallery({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <AnimatePresence initial={false} custom={direction}>
-        <motion.img
-          key={currentIndex}
-          src={images[currentIndex]}
-          alt={
-            images.length > 1
-              ? `${productName} ${altContext} — view ${currentIndex + 1} of ${images.length}`
-              : `${productName} ${altContext}`
-          }
-          loading={priority && currentIndex === 0 ? "eager" : "lazy"}
-          fetchPriority={priority && currentIndex === 0 ? "high" : "auto"}
-          decoding="async"
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            x: { type: "spring", stiffness: 300, damping: 30 },
-            opacity: { duration: 0.2 },
-          }}
-          className="absolute inset-0 w-full h-full object-contain p-2 transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-      </AnimatePresence>
+      {/* `key` remounts the <img> on change, which restarts the CSS slide.
+          direction === 0 is the very first paint — and on a product page that
+          image is the LCP element — so it is deliberately left unanimated. */}
+      <Image
+        key={currentIndex}
+        src={images[currentIndex]}
+        alt={
+          images.length > 1
+            ? `${productName} ${altContext} — view ${currentIndex + 1} of ${images.length}`
+            : `${productName} ${altContext}`
+        }
+        fill
+        sizes={sizes}
+        priority={priority && currentIndex === 0}
+        className={cn(
+          "object-contain p-2 transition-transform duration-700 ease-out group-hover:scale-105",
+          direction > 0 && "animate-slide-from-right",
+          direction < 0 && "animate-slide-from-left"
+        )}
+      />
 
       <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60 pointer-events-none" />
 

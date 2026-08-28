@@ -102,10 +102,23 @@ export function breadcrumbSchema(crumbs: Crumb[]) {
   };
 }
 
-/** Renders any schema object as a JSON-LD script tag. */
+/**
+ * Renders any schema object as a JSON-LD script tag.
+ *
+ * `JSON.stringify` does not escape `<`, so a product name containing
+ * `</script>` would terminate the tag early and let the remainder be parsed as
+ * HTML. Today every value comes from the static catalogue, but escaping the
+ * three HTML-significant sequences closes the injection path for good — the
+ * escapes are valid JSON string escapes, so parsers still read the same data.
+ */
 export function jsonLd(schema: object) {
+  const json = JSON.stringify(schema)
+    .replaceAll("<", "\\u003c")
+    .replaceAll(">", "\\u003e")
+    .replaceAll("&", "\\u0026");
+
   return {
     type: "application/ld+json",
-    dangerouslySetInnerHTML: { __html: JSON.stringify(schema) },
+    dangerouslySetInnerHTML: { __html: json },
   };
 }

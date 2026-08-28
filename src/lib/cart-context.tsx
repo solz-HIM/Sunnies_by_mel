@@ -55,6 +55,28 @@ function readStorage(): string | null {
   }
 }
 
+/**
+ * localStorage is attacker- and accident-writable (another tab, an extension, a
+ * half-finished write). The cart page calls `price.toFixed()` and renders
+ * `image` as a src, so an entry missing those fields would throw during render
+ * and blank the page. Validate the shape and drop anything malformed.
+ */
+function isCartItem(value: unknown): value is CartItem {
+  if (typeof value !== "object" || value === null) return false;
+  const item = value as Record<string, unknown>;
+  return (
+    typeof item.cartItemId === "string" &&
+    typeof item.id === "string" &&
+    typeof item.name === "string" &&
+    typeof item.image === "string" &&
+    typeof item.price === "number" &&
+    Number.isFinite(item.price) &&
+    typeof item.quantity === "number" &&
+    Number.isInteger(item.quantity) &&
+    item.quantity > 0
+  );
+}
+
 function getSnapshot(): CartItem[] {
   const raw = readStorage();
   if (!initialised || raw !== cacheRaw) {
@@ -64,8 +86,9 @@ function getSnapshot(): CartItem[] {
       cache = EMPTY;
     } else {
       try {
-        const parsed = JSON.parse(raw);
-        cache = Array.isArray(parsed) ? (parsed as CartItem[]) : EMPTY;
+        const parsed: unknown = JSON.parse(raw);
+        const valid = Array.isArray(parsed) ? parsed.filter(isCartItem) : [];
+        cache = valid.length ? valid : EMPTY;
       } catch {
         cache = EMPTY;
       }

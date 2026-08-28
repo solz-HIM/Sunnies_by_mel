@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart-context";
@@ -39,7 +38,6 @@ export default function Header() {
                 alt="Sunnies by Mel logo"
                 width={48}
                 height={48}
-                priority
                 className="w-full h-full object-cover"
               />
             </div>
@@ -62,11 +60,7 @@ export default function Header() {
                 >
                   {link.label}
                   {isActive(link.path) && (
-                    <motion.div
-                      layoutId="activeIndicator"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
                   )}
                 </Button>
               </Link>
@@ -87,13 +81,9 @@ export default function Header() {
               >
                 <ShoppingCart className="h-5 w-5" />
                 {cartItems.length > 0 && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
-                  >
+                  <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pop-in">
                     {cartItems.length}
-                  </motion.span>
+                  </span>
                 )}
               </Button>
             </Link>
@@ -118,11 +108,9 @@ export default function Header() {
 
         {/* Mobile Nav */}
         {isMenuOpen && (
-          <motion.nav
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl"
+          <nav
+            id="mobile-nav"
+            className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl animate-reveal"
           >
             <div className="px-4 py-4 space-y-2">
               {navLinks.map((link) => (
@@ -144,7 +132,7 @@ export default function Header() {
                 </Link>
               ))}
             </div>
-          </motion.nav>
+          </nav>
         )}
       </div>
     </header>

@@ -121,7 +121,6 @@ export default function HomePage() {
           priority
           fetchPriority="high"
           placeholder="blur"
-          quality={70}
           sizes="100vw"
           className="object-cover"
         />
@@ -156,6 +155,7 @@ export default function HomePage() {
           <div className="mt-10 flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-center">
             <Link
               href="/sunnies"
+              prefetch={false}
               className="inline-flex min-h-14 items-center justify-center rounded-lg bg-primary px-8 text-lg font-semibold text-primary-foreground shadow-[0_0_20px_rgba(255,145,0,0.3)] transition-all duration-300 hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(255,145,0,0.5)] active:scale-[0.98]"
             >
               Shop sunglasses
@@ -163,6 +163,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/tiny-treasures"
+              prefetch={false}
               className="inline-flex min-h-14 items-center justify-center rounded-lg border border-white/20 bg-white/5 px-8 text-lg font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 active:scale-[0.98]"
             >
               Shop jewellery
@@ -218,6 +219,7 @@ export default function HomePage() {
             <Reveal>
               <Link
                 href="/sunnies"
+                prefetch={false}
                 className="group flex h-full flex-col rounded-2xl border border-border/50 bg-card/50 p-8 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-primary/50"
               >
                 <Eye className="mb-5 h-8 w-8 text-primary" aria-hidden="true" />
@@ -239,6 +241,7 @@ export default function HomePage() {
             <Reveal delay={0.1}>
               <Link
                 href="/tiny-treasures"
+                prefetch={false}
                 className="group flex h-full flex-col rounded-2xl border border-border/50 bg-card/50 p-8 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-primary/50"
               >
                 <Gem className="mb-5 h-8 w-8 text-primary" aria-hidden="true" />

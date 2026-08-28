@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   ShoppingBag,
   ArrowRight,
@@ -49,11 +48,7 @@ export default function CartPage() {
 
   if (cartItems.length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="min-h-[80vh] flex flex-col items-center justify-center px-4"
-      >
+      <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 animate-reveal">
         <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
           <ShoppingBag className="h-10 w-10 text-muted-foreground" />
         </div>
@@ -73,14 +68,12 @@ export default function CartPage() {
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </Link>
-      </motion.div>
+      </div>
     );
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+    <div
       className="min-h-screen pt-24 pb-20 bg-background"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -153,6 +146,6 @@ export default function CartPage() {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
