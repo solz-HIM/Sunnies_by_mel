@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -10,8 +11,9 @@ import { useCart } from "@/lib/cart-context";
 
 const navLinks = [
   { path: "/", label: "Home" },
-  { path: "/sunnies", label: "Sunnies" },
-  { path: "/tiny-treasures", label: "Tiny Treasures" },
+  { path: "/sunnies", label: "Sunglasses" },
+  { path: "/tiny-treasures", label: "Jewellery" },
+  { path: "/#visit", label: "Visit us" },
 ];
 
 export default function Header() {
@@ -26,11 +28,18 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
+          <Link
+            href="/"
+            aria-label="Sunnies by Mel — home"
+            className="flex items-center space-x-2 group"
+          >
             <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-primary/50 shadow-lg group-hover:shadow-xl group-hover:border-primary transition-all duration-300 flex-shrink-0">
-              <img
-                src="/profile-pic.png"
-                alt="Sunnies by Mel"
+              <Image
+                src="/logo.png"
+                alt="Sunnies by Mel logo"
+                width={48}
+                height={48}
+                priority
                 className="w-full h-full object-cover"
               />
             </div>
@@ -66,10 +75,12 @@ export default function Header() {
 
           {/* Right side */}
           <div className="flex items-center gap-2">
-            <Link href="/cart" className="relative group">
+            <Link href="/cart" aria-label="View your enquiry list" className="relative group">
               <Button
                 variant="outline"
                 size="icon"
+                aria-hidden="true"
+                tabIndex={-1}
                 className={`relative border-border/50 hover:bg-secondary transition-all duration-300 ${
                   isActive("/cart") ? "bg-secondary text-primary" : ""
                 }`}
@@ -92,6 +103,8 @@ export default function Header() {
               variant="ghost"
               size="icon"
               className="md:hidden"
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen((v) => !v)}
             >
               {isMenuOpen ? (

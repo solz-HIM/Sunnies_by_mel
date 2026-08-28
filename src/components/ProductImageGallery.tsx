@@ -9,6 +9,10 @@ import { cn } from "@/lib/utils";
 interface ProductImageGalleryProps {
   images: string[];
   productName?: string;
+  /** Extra descriptive context appended to each alt attribute (SEO + a11y). */
+  altContext?: string;
+  /** Eager-load the first frame when this gallery is the page's LCP element. */
+  priority?: boolean;
 }
 
 const slideVariants = {
@@ -20,6 +24,8 @@ const slideVariants = {
 export default function ProductImageGallery({
   images = [],
   productName = "Product",
+  altContext = "at Sunnies by Mel, Harare",
+  priority = false,
 }: ProductImageGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -46,10 +52,15 @@ export default function ProductImageGallery({
     setCurrentIndex(index);
   };
 
-  useEffect(() => {
+  // Reset to the first frame when the gallery is handed a different set of
+  // images. Adjusting state during render is React's documented alternative to
+  // a reset effect — it avoids the extra render pass an effect would cause.
+  const [previousCount, setPreviousCount] = useState(images.length);
+  if (previousCount !== images.length) {
+    setPreviousCount(images.length);
     setCurrentIndex(0);
     setDirection(0);
-  }, [images.length]);
+  }
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -79,7 +90,14 @@ export default function ProductImageGallery({
         <motion.img
           key={currentIndex}
           src={images[currentIndex]}
-          alt={`${productName} - Image ${currentIndex + 1}`}
+          alt={
+            images.length > 1
+              ? `${productName} ${altContext} — view ${currentIndex + 1} of ${images.length}`
+              : `${productName} ${altContext}`
+          }
+          loading={priority && currentIndex === 0 ? "eager" : "lazy"}
+          fetchPriority={priority && currentIndex === 0 ? "high" : "auto"}
+          decoding="async"
           custom={direction}
           variants={slideVariants}
           initial="enter"
@@ -101,12 +119,13 @@ export default function ProductImageGallery({
             <Button
               variant="secondary"
               size="icon"
-              className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background text-foreground shadow-md"
+              className="h-10 w-10 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background text-foreground shadow-md"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 paginate(-1);
               }}
+              aria-label="Previous image"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -115,35 +134,43 @@ export default function ProductImageGallery({
             <Button
               variant="secondary"
               size="icon"
-              className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background text-foreground shadow-md"
+              className="h-10 w-10 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background text-foreground shadow-md"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 paginate(1);
               }}
+              aria-label="Next image"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
 
           <div className="absolute bottom-3 left-0 right-0 flex flex-col items-center gap-2 z-10 pointer-events-none">
-            <div className="flex gap-1.5 pointer-events-auto">
+            <div className="flex pointer-events-auto">
+              {/* Dots stay small visually but each button keeps a 44px tap target */}
               {images.map((_, idx) => (
                 <button
                   key={idx}
+                  type="button"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     goToImage(idx);
                   }}
-                  className={cn(
-                    "h-2 rounded-full transition-all duration-300",
-                    idx === currentIndex
-                      ? "bg-primary w-4"
-                      : "bg-primary/40 hover:bg-primary/60 w-2"
-                  )}
-                  aria-label={`Go to image ${idx + 1}`}
-                />
+                  className="flex h-11 w-6 items-center justify-center"
+                  aria-label={`Show image ${idx + 1} of ${images.length}`}
+                  aria-current={idx === currentIndex}
+                >
+                  <span
+                    className={cn(
+                      "h-2 rounded-full transition-all duration-300",
+                      idx === currentIndex
+                        ? "bg-primary w-4"
+                        : "bg-primary/40 hover:bg-primary/60 w-2"
+                    )}
+                  />
+                </button>
               ))}
             </div>
             <span className="text-[10px] font-medium text-primary-foreground/90 bg-background/40 backdrop-blur-md px-2 py-0.5 rounded-full">

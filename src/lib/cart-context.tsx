@@ -2,10 +2,10 @@
 
 import React, {
   createContext,
-  useContext,
-  useEffect,
-  useState,
   useCallback,
+  useContext,
+  useMemo,
+  useSyncExternalStore,
 } from "react";
 import type { Product } from "./products";
 
@@ -25,6 +25,84 @@ interface CartContextValue {
   getCartCount: () => number;
 }
 
+const STORAGE_KEY = "sunnies-cart";
+
+/**
+ * localStorage is an external store, so the cart is modelled as one rather than
+ * as state mirrored into it by an effect. Reading it in `useEffect` +
+ * `setCartItems` caused a cascading render on every mount (and tripped
+ * react-hooks/set-state-in-effect); `useSyncExternalStore` reads it during
+ * render on the client and falls back to an empty cart on the server, so
+ * hydration stays consistent.
+ */
+
+/** Stable empty reference — getSnapshot must not return a new array each call. */
+const EMPTY: CartItem[] = [];
+
+const listeners = new Set<() => void>();
+
+/** Cached parse of the persisted cart. Invalidated whenever we write. */
+let cache: CartItem[] = EMPTY;
+let cacheRaw: string | null = null;
+let initialised = false;
+
+function readStorage(): string | null {
+  try {
+    return localStorage.getItem(STORAGE_KEY);
+  } catch {
+    // Private mode / blocked storage — behave as an empty cart.
+    return null;
+  }
+}
+
+function getSnapshot(): CartItem[] {
+  const raw = readStorage();
+  if (!initialised || raw !== cacheRaw) {
+    initialised = true;
+    cacheRaw = raw;
+    if (!raw) {
+      cache = EMPTY;
+    } else {
+      try {
+        const parsed = JSON.parse(raw);
+        cache = Array.isArray(parsed) ? (parsed as CartItem[]) : EMPTY;
+      } catch {
+        cache = EMPTY;
+      }
+    }
+  }
+  return cache;
+}
+
+/** The server has no cart; matching this on first client render avoids a mismatch. */
+const getServerSnapshot = (): CartItem[] => EMPTY;
+
+function subscribe(listener: () => void): () => void {
+  listeners.add(listener);
+  // Keep the cart in sync when it is changed in another tab.
+  window.addEventListener("storage", listener);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener("storage", listener);
+  };
+}
+
+function write(items: CartItem[]): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // Storage unavailable — the update still applies for this render pass.
+  }
+  cacheRaw = readStorage();
+  cache = items;
+  initialised = true;
+  listeners.forEach((listener) => listener());
+}
+
+function update(updater: (previous: CartItem[]) => CartItem[]): void {
+  write(updater(getSnapshot()));
+}
+
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
 export function useCart(): CartContextValue {
@@ -34,35 +112,17 @@ export function useCart(): CartContextValue {
 }
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("sunnies-cart");
-      if (saved) setCartItems(JSON.parse(saved));
-    } catch {
-      // ignore
-    }
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    localStorage.setItem("sunnies-cart", JSON.stringify(cartItems));
-  }, [cartItems, hydrated]);
+  const cartItems = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const addToCart = useCallback(
     (product: Product, selectedVariationImage?: string) => {
-      setCartItems((prev) => {
+      update((prev) => {
         const variationImage = selectedVariationImage || product.image;
         const cartItemId = `${product.id}-${btoa(variationImage).substring(0, 15)}`;
         const existing = prev.find((i) => i.cartItemId === cartItemId);
         if (existing) {
           return prev.map((i) =>
-            i.cartItemId === cartItemId
-              ? { ...i, quantity: i.quantity + 1 }
-              : i
+            i.cartItemId === cartItemId ? { ...i, quantity: i.quantity + 1 } : i
           );
         }
         return [
@@ -75,7 +135,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 
   const removeFromCart = useCallback((cartItemId: string) => {
-    setCartItems((prev) => prev.filter((i) => i.cartItemId !== cartItemId));
+    update((prev) => prev.filter((i) => i.cartItemId !== cartItemId));
   }, []);
 
   const updateQuantity = useCallback(
@@ -84,14 +144,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         removeFromCart(cartItemId);
         return;
       }
-      setCartItems((prev) =>
+      update((prev) =>
         prev.map((i) => (i.cartItemId === cartItemId ? { ...i, quantity } : i))
       );
     },
     [removeFromCart]
   );
 
-  const clearCart = useCallback(() => setCartItems([]), []);
+  const clearCart = useCallback(() => write(EMPTY), []);
 
   const getCartTotal = useCallback(
     () => cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0),
@@ -103,19 +163,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [cartItems]
   );
 
-  return (
-    <CartContext.Provider
-      value={{
-        cartItems,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        getCartTotal,
-        getCartCount,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+  const value = useMemo(
+    () => ({
+      cartItems,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      getCartTotal,
+      getCartCount,
+    }),
+    [cartItems, addToCart, removeFromCart, updateQuantity, clearCart, getCartTotal, getCartCount]
   );
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Sunnies by Mel",
-  description: "How Sunnies by Mel collects and uses your information.",
+  title: "Privacy Policy",
+  description:
+    "How Sunnies by Mel in Harare collects, uses and protects your information when you browse the catalogue or order sunglasses and jewellery over WhatsApp.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

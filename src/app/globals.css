@@ -52,7 +52,7 @@
   --popover: hsl(224 71% 7%);
   --popover-foreground: hsl(213 31% 91%);
   --primary: hsl(32 95% 54%);
-  --primary-foreground: hsl(0 0% 100%);
+  --primary-foreground: hsl(24 90% 8%);
   --secondary: hsl(216 34% 17%);
   --secondary-foreground: hsl(213 31% 91%);
   --muted: hsl(216 34% 17%);
@@ -68,7 +68,7 @@
   --sidebar: hsl(224 71% 7%);
   --sidebar-foreground: hsl(213 31% 91%);
   --sidebar-primary: hsl(32 95% 54%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-primary-foreground: hsl(24 90% 8%);
   --sidebar-accent: hsl(216 34% 17%);
   --sidebar-accent-foreground: hsl(213 31% 91%);
   --sidebar-border: hsl(216 34% 17%);
@@ -83,7 +83,7 @@
   --popover: hsl(224 71% 7%);
   --popover-foreground: hsl(213 31% 91%);
   --primary: hsl(32 95% 54%);
-  --primary-foreground: hsl(0 0% 100%);
+  --primary-foreground: hsl(24 90% 8%);
   --secondary: hsl(216 34% 17%);
   --secondary-foreground: hsl(213 31% 91%);
   --muted: hsl(216 34% 17%);
@@ -98,7 +98,7 @@
   --sidebar: hsl(224 71% 7%);
   --sidebar-foreground: hsl(213 31% 91%);
   --sidebar-primary: hsl(32 95% 54%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-primary-foreground: hsl(24 90% 8%);
   --sidebar-accent: hsl(216 34% 17%);
   --sidebar-accent-foreground: hsl(213 31% 91%);
   --sidebar-border: hsl(216 34% 17%);
@@ -146,5 +146,31 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: hsl(216 34% 25%);
     border-radius: 2px;
+  }
+}
+
+/* Lightweight entrance animation used in place of JS-driven stagger on large
+   product grids. Honours prefers-reduced-motion. */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-reveal {
+  /* `backwards` (not `both`): the delay is still respected, but once the
+     animation finishes no keyframe transform lingers. A lingering transform
+     would make the card a containing block for any `position: fixed` child. */
+  animation: reveal-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-reveal {
+    animation: none;
   }
 }

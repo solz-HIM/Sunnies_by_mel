@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ShoppingCart, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,28 +33,42 @@ export default function ProductDetailModal({
   const [isAdding, setIsAdding] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<
     Product["frameVariations"][0] | null
-  >(null);
+  >(() => product?.frameVariations?.[0] ?? null);
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
   const { addToCart } = useCart();
+
+  // document.body only exists on the client; skip the portal during SSR.
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   const images = product?.images?.length ? product.images : [product?.image ?? ""];
   const hasMultipleImages = images.length > 1;
 
+  // Reset the gallery and variation choice whenever the modal is opened for a
+  // different product. Done during render rather than in an effect so there is
+  // no flash of the previous product's selection.
+  const [previousKey, setPreviousKey] = useState(
+    () => `${isOpen}:${product?.id ?? ""}`
+  );
+  const currentKey = `${isOpen}:${product?.id ?? ""}`;
+  if (previousKey !== currentKey) {
+    setPreviousKey(currentKey);
+    setCurrentIndex(0);
+    setDirection(0);
+    setSelectedVariation(product?.frameVariations?.[0] ?? null);
+  }
+
+  // Scroll locking is a genuine external-system sync, so it stays in an effect.
   useEffect(() => {
-    if (isOpen && product) {
-      setCurrentIndex(0);
-      setDirection(0);
-      setSelectedVariation(
-        product.frameVariations?.length ? product.frameVariations[0] : null
-      );
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isOpen, product]);
+  }, [isOpen]);
 
   const paginate = useCallback(
     (newDir: number) => {
@@ -109,7 +124,11 @@ export default function ProductDetailModal({
 
   if (!product) return null;
 
-  return (
+  // Rendered into <body> rather than inside the product card. A `position:
+  // fixed` overlay is positioned against the nearest transformed ancestor, and
+  // the card grid animates its wrappers — without the portal the dialog lands
+  // off-screen mid-animation.
+  const overlay = (
     <>
       <AnimatePresence>
         {isOpen && (
@@ -337,4 +356,6 @@ export default function ProductDetailModal({
       />
     </>
   );
+
+  return mounted ? createPortal(overlay, document.body) : null;
 }

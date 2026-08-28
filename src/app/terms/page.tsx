@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Sunnies by Mel",
-  description: "Terms and conditions for purchasing from Sunnies by Mel.",
+  title: "Terms of Service",
+  description:
+    "Terms and conditions for buying sunglasses and jewellery from Sunnies by Mel, Belgravia, Harare — pricing, WhatsApp orders, delivery and our no-returns policy.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

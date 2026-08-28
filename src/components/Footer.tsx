@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { Mail, ExternalLink } from "lucide-react";
+import { Mail, ExternalLink, MapPin, Phone } from "lucide-react";
+import { sunniesProducts, tinyTreasuresProducts } from "@/lib/products";
+import { SITE } from "@/lib/seo";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -20,35 +22,25 @@ function FacebookIcon({ className }: { className?: string }) {
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
+  /* Deep links straight from the footer give the most valuable product URLs an
+     extra site-wide inbound link, instead of leaving them two clicks deep in a
+     single category grid. */
+  const popularSunnies = sunniesProducts.slice(0, 6);
+  const popularTreasures = tinyTreasuresProducts.slice(0, 5);
+
   return (
     <footer className="bg-muted text-muted-foreground border-t border-border mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-foreground">
+            <h2 className="font-semibold text-lg mb-4 text-foreground">
               Sunnies by Mel
-            </h3>
-            <p className="text-sm leading-relaxed">
-              Premium sunglasses and accessories for those who appreciate
-              quality and style.
+            </h2>
+            <p className="text-sm leading-relaxed mb-5">
+              A sunglasses and jewellery store in Belgravia, Harare. Polarized,
+              photochromic and anti-blue-light eyewear plus non-tarnish Tiny
+              Treasures jewellery — details matter.
             </p>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg mb-4 text-foreground">
-              Visit us
-            </h3>
-            <p className="text-sm leading-relaxed">
-              78 East Road
-              <br />
-              Belgravia, Harare
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-lg mb-4 text-foreground">
-              Connect
-            </h3>
             <div className="flex flex-col space-y-3">
               <a
                 href="https://www.instagram.com/sunnies_by_mel"
@@ -60,13 +52,6 @@ export default function Footer() {
                 <span>@sunnies_by_mel</span>
               </a>
               <a
-                href="mailto:brendlync@gmail.com"
-                className="flex items-center space-x-2 text-sm hover:text-primary transition-colors duration-200"
-              >
-                <Mail className="h-4 w-4" />
-                <span>Email Us</span>
-              </a>
-              <a
                 href="https://www.facebook.com/share/1BZkprESF4/"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -75,7 +60,97 @@ export default function Footer() {
                 <FacebookIcon className="h-4 w-4" />
                 <span>Message us on Facebook</span>
               </a>
+              <a
+                href={`mailto:${SITE.email}`}
+                className="flex items-center space-x-2 text-sm hover:text-primary transition-colors duration-200"
+              >
+                <Mail className="h-4 w-4" />
+                <span>{SITE.email}</span>
+              </a>
             </div>
+          </div>
+
+          <nav aria-labelledby="footer-sunnies">
+            <h2 id="footer-sunnies" className="font-semibold text-lg mb-4 text-foreground">
+              <Link href="/sunnies" className="hover:text-primary transition-colors duration-200">
+                Sunglasses
+              </Link>
+            </h2>
+            <ul className="space-y-2.5 text-sm">
+              {popularSunnies.map((product) => (
+                <li key={product.id}>
+                  <Link
+                    href={`/product/${product.id}`}
+                    className="hover:text-primary transition-colors duration-200"
+                  >
+                    {product.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/sunnies" className="font-medium text-primary hover:underline">
+                  All {sunniesProducts.length} sunglasses →
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          <nav aria-labelledby="footer-treasures">
+            <h2 id="footer-treasures" className="font-semibold text-lg mb-4 text-foreground">
+              <Link href="/tiny-treasures" className="hover:text-primary transition-colors duration-200">
+                Tiny Treasures
+              </Link>
+            </h2>
+            <ul className="space-y-2.5 text-sm">
+              {popularTreasures.map((product) => (
+                <li key={product.id}>
+                  <Link
+                    href={`/product/${product.id}`}
+                    className="hover:text-primary transition-colors duration-200"
+                  >
+                    {product.name}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/tiny-treasures" className="font-medium text-primary hover:underline">
+                  All {tinyTreasuresProducts.length} pieces →
+                </Link>
+              </li>
+            </ul>
+          </nav>
+
+          <div>
+            <h2 className="font-semibold text-lg mb-4 text-foreground">Visit us</h2>
+            <address className="not-italic space-y-3 text-sm leading-relaxed">
+              <p className="flex items-start gap-2">
+                <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-primary" aria-hidden="true" />
+                <span>
+                  {SITE.address.street}
+                  <br />
+                  {SITE.address.suburb}, {SITE.address.city}
+                  <br />
+                  {SITE.address.countryName}
+                </span>
+              </p>
+              <p className="flex items-center gap-2">
+                <Phone className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                <a href={`tel:${SITE.telephone}`} className="hover:text-primary transition-colors duration-200">
+                  {SITE.telephone}
+                </a>
+              </p>
+            </address>
+            <p className="mt-4 text-sm leading-relaxed">
+              Mon–Fri 8:30am–5:00pm
+              <br />
+              Sat 9:00am–1:00pm
+            </p>
+            <Link
+              href="/#visit"
+              className="mt-4 inline-block text-sm font-medium text-primary hover:underline"
+            >
+              See us on the map →
+            </Link>
           </div>
         </div>
 
@@ -98,7 +173,7 @@ export default function Footer() {
             href="https://solzdesigns.co.zw"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/60 hover:text-primary transition-colors duration-200"
+            className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors duration-200"
           >
             Website designed by Solz Designs
             <ExternalLink className="h-3 w-3" />

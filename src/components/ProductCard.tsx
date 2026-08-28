@@ -44,7 +44,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="absolute top-4 right-4 translate-x-12 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out z-20">
               <Button
                 size="icon"
-                className="rounded-full bg-primary/90 hover:bg-primary shadow-lg h-9 w-9"
+                aria-label={`Quick view: ${product.name}`}
+                className="rounded-full bg-primary/90 hover:bg-primary shadow-lg h-11 w-11"
                 onClick={openModal}
               >
                 <Plus className="h-5 w-5 text-primary-foreground" />
@@ -75,19 +76,22 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Button
             onClick={openModal}
             variant="secondary"
-            className="w-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300 active:scale-[0.98]"
+            aria-label={`Select variation — ${product.name}`}
+            className="w-full min-h-11 bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300 active:scale-[0.98]"
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Select Variation
+            <ShoppingCart className="h-4 w-4 mr-2" aria-hidden="true" />
+            Select variation
           </Button>
         </div>
       </div>
 
-      <ProductDetailModal
-        product={product}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <ProductDetailModal
+          product={product}
+          isOpen
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </>
   );
 }

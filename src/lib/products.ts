@@ -16,6 +16,13 @@ export interface Product {
   category: string;
   tags: string[];
   inStock: boolean;
+  /**
+   * Product is kept in the data file but withheld from the live site. Used for
+   * the legacy Hostinger-CDN imports whose photography 404s — an e-commerce
+   * page with no product image is exactly the thin content Google refuses to
+   * index. Restore one by adding real photos and dropping this flag.
+   */
+  archived?: boolean;
 }
 
 // Local image path helpers
@@ -31,17 +38,15 @@ const GENERIC_SUNNIES_PLACEHOLDER =
 const rawSunnies = [
   // ── Existing CDN products ──────────────────────────────────────────────────
   {
-    name: "Advanced polarized",
+    id: "advanced-polarized-sunglasses",
+    name: "Advanced Polarized Sunglasses",
     price: 20.0,
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/e1446b98e8dd8dbdd3a5c3a084aa4587.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/e1446b98e8dd8dbdd3a5c3a084aa4587.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/2d863d6f9b518f840fb69b68cbbe32b6.jpg",
-    ],
+    image: sI("Advanced polarized $20.00", "Advanced polarized.jpeg")[0],
+    images: sI("Advanced polarized $20.00", "Advanced polarized.jpeg", "Advanced polarized 2.jpeg"),
   },
   {
-    name: "Anti Blue & Polarized",
+    id: "anti-blue-polarized-sunglasses",
+    name: "Anti Blue Light & Polarized Sunglasses",
     price: 15.0,
     image:
       "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/f88467d800bed47ca809add8e0842a09.jpg",
@@ -55,6 +60,7 @@ const rawSunnies = [
       { name: "Clear Frame", imageIndex: 0 },
       { name: "Black Frame", imageIndex: 1 },
     ],
+    archived: true,
   },
   {
     id: "anti-blue-light-glasses",
@@ -77,11 +83,13 @@ const rawSunnies = [
       { id: "black-square", name: "Black Square Frame", imageIndex: 2 },
       { id: "gray-black", name: "Gray and Black Frame", imageIndex: 3 },
     ],
+    archived: true,
   },
   {
-    name: "Double Beam",
+    id: "double-beam-hexagonal-sunglasses",
+    name: "Double Beam Hexagonal Sunglasses",
     price: 10.0,
-    category: "sunglasses",
+    category: "sunnies",
     image:
       "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/5b01c7df1443c6443f71d4235a2c813a.jpg",
     images: [
@@ -89,9 +97,11 @@ const rawSunnies = [
     ],
     description:
       "Classic black hexagonal frame sunglasses with brown polarized lenses",
+    archived: true,
   },
   {
-    name: "Double Sunglasses",
+    id: "double-bridge-sunglasses",
+    name: "Double Bridge Sunglasses",
     price: 20.0,
     category: "sunnies",
     image:
@@ -101,6 +111,7 @@ const rawSunnies = [
     ],
     description:
       "Stylish double sunglasses featuring a unique frame design for a bold look and premium UV protection.",
+    archived: true,
   },
   {
     id: "frameless-sunglasses",
@@ -116,19 +127,15 @@ const rawSunnies = [
     ],
     description:
       "Elegant frameless sunglasses with premium gold metal bridge and hinges. Features wood-grain arms and available in multiple lens colors including brown gradient, clear, and dark purple.",
+    archived: true,
   },
   {
     id: "gm-oval-unisex",
     name: "GM Oval Unisex",
     price: 15.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/c84bd4fadada33fe329c68373a731f54.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/c84bd4fadada33fe329c68373a731f54.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/2ec3faed094ce595b9129857999c5cd9.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/aadb51ddea3dd667941915be591cb526.jpg",
-    ],
+    image: sI("GM oval unisex $15", "GM oval unisex.jpeg")[0],
+    images: sI("GM oval unisex $15", "GM oval unisex.jpeg", "gm oval2.jpeg", "gm oval 3.jpeg"),
     description:
       "Classic oval frame style designed for a universal fit. Features a sleek black frame with versatile lens options.",
   },
@@ -144,6 +151,7 @@ const rawSunnies = [
     ],
     description:
       "Brown tortoiseshell round frame sunglasses with clear lenses and silver metal arms",
+    archived: true,
   },
   {
     id: "korean-style-square-frame",
@@ -157,20 +165,15 @@ const rawSunnies = [
     ],
     description:
       "Korean style square frame sunglasses available in three variations: black, tortoiseshell, and purple gradient.",
+    archived: true,
   },
   {
     id: "ladies-cateye",
     name: "Ladies Cateye",
     price: 15.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/b660e2ac6a02f9f189eb76cf51ea54e6.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/b660e2ac6a02f9f189eb76cf51ea54e6.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/10d508ec133930ffa9ee3e75f897559d.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/6a90d4acf6b6cf42061a69f235864342.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/339a5eae67fe2d405d3de911112d40a3.jpg",
-    ],
+    image: sI("ladies cateye $15.00", "ladies cateye.jpeg")[0],
+    images: sI("ladies cateye $15.00", "ladies cateye.jpeg", "ladies cateye 2.jpeg", "ladies cateye 3.jpeg", "ladies cateye 4.jpeg"),
     description: "Classic ladies cateye sunglasses with stylish frames and quality lenses",
   },
   {
@@ -185,6 +188,7 @@ const rawSunnies = [
     ],
     description:
       "Large cat eye sunglasses with black frame, dark gray polarized lenses, and thin black arms.",
+    archived: true,
   },
   {
     id: "male-half-frame-sunglasses",
@@ -198,19 +202,15 @@ const rawSunnies = [
     ],
     description:
       "Sophisticated male half frame sunglasses with sleek black and gold metal frame and dark gray polarized lenses.",
+    archived: true,
   },
   {
     id: "metal-half-frame",
     name: "Metal Half Frame",
     price: 10.0,
     category: "sunglasses",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/88ce15db049e36632c365f4253859604.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/88ce15db049e36632c365f4253859604.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/8225ad133ad672b966e967ea9477eeb6.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/b099e49ddfda8356587d67f1a085e408.jpg",
-    ],
+    image: sI("metal half frame $10.00", "metal half frame.jpeg")[0],
+    images: sI("metal half frame $10.00", "metal half frame.jpeg", "metal half frame 2.jpeg", "metal half frame 3.jpeg"),
     description: "Silver metal frame with black top half and dark gray polarized lenses",
   },
   {
@@ -225,6 +225,7 @@ const rawSunnies = [
     ],
     description:
       "Minimalist frameless design with gold metal bridge and arms, brown gradient polarized lenses",
+    archived: true,
   },
   {
     id: "nd-dimming-glasses",
@@ -238,6 +239,7 @@ const rawSunnies = [
     ],
     description:
       "Professional-grade ND dimming glasses with flip-up design and dark gray polarized lenses",
+    archived: true,
   },
   {
     id: "male-optical-polarized",
@@ -256,19 +258,15 @@ const rawSunnies = [
       { id: "orange", name: "Orange Polarized", imageIndex: 0 },
       { id: "dark-gray", name: "Dark Gray Polarized", imageIndex: 0 },
     ],
+    archived: true,
   },
   {
     id: "male-retro",
     name: "Male Retro",
     price: 20.0,
     category: "retro",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/f315fd6a88f64b126b189e28f22c2d94.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/f315fd6a88f64b126b189e28f22c2d94.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/9f6b83c72a2548d88f50771bd52f8ec1.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/a6aac7bd9875eddd93894fcf28e9cd6f.jpg",
-    ],
+    image: sI("male retro $20.00", "male retro.jpeg")[0],
+    images: sI("male retro $20.00", "male retro.jpeg", "male retro 2.jpeg", "male retro 3.jpeg"),
     description:
       "Classic retro-style sunglasses with polarized lenses. Features multiple frame styles.",
   },
@@ -287,21 +285,15 @@ const rawSunnies = [
     ],
     description:
       "Timeless retro thick square sunglasses with substantial frames that make a bold statement. Features premium polarized lenses in multiple color options.",
+    archived: true,
   },
   {
     id: "man-gm-thick-retro-oval",
     name: "Man GM Thick Retro Oval",
     price: 15.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/b4658cd4a2d305c61629d31ab38268e5.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/b4658cd4a2d305c61629d31ab38268e5.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/ef902ef8118f5dd7352bac79084fc680.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/89f13cd1a7131422b8ae39a1f557ce00.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/2426b3ad1bfa9655553e8019ec438560.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/1171081a658955914ac542ce1d3db6b9.jpg",
-    ],
+    image: sI("male retro thick oval $15.00", "male retro thick oval.jpeg")[0],
+    images: sI("male retro thick oval $15.00", "male retro thick oval.jpeg", "male retro thick oval 2.jpeg", "male retro thick oval 3.jpeg", "male retro thick oval 4.jpeg"),
     description:
       "Bold retro oval sunglasses with thick frames. Features five stunning polarized color options.",
   },
@@ -320,6 +312,7 @@ const rawSunnies = [
     ],
     description:
       "Unisex small square frame sunglasses with polarized lenses. Multiple frame and lens color combinations.",
+    archived: true,
   },
   {
     id: "men-square-polarized",
@@ -333,6 +326,7 @@ const rawSunnies = [
       "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/f03bb54c814e2886be2200030837cadc.jpg",
     ],
     description: "Men square polarized sunglasses with black metal frame and polarized lenses",
+    archived: true,
   },
   {
     id: "metal-double-bridge",
@@ -346,6 +340,7 @@ const rawSunnies = [
     ],
     description:
       "Classic metal double bridge design with polarized lenses. Clear frame with dark gray or light blue gradient lenses.",
+    archived: true,
   },
   {
     id: "retro-box",
@@ -362,20 +357,15 @@ const rawSunnies = [
     description:
       "Vintage-inspired retro box sunglasses with acetate frame and metal bridge. Polarized lenses for UV protection and style.",
     tags: ["retro", "vintage", "polarized", "uv-protection"],
+    archived: true,
   },
   {
     id: "new-retro-frameless",
     name: "New Retro Frameless",
     price: 15.0,
     category: "frameless",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7056f92ee23cecc81f564c59d6da62cc.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7056f92ee23cecc81f564c59d6da62cc.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7601edf1fae3f94527cd320a6117d36e.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/4441efca628112386cf6eb13c754b5e8.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/112b71a0a031a82bc11f4a5b651f845f.jpg",
-    ],
+    image: sI("new retro frameless $15.00", "new retro frameless.jpeg")[0],
+    images: sI("new retro frameless $15.00", "new retro frameless.jpeg", "new retro frameless 2.jpeg", "new retro frameless 2.1.jpeg", "new retro frameless 3.jpeg"),
     description: "Vintage-inspired frameless sunglasses with clear lenses and gold/black metal accents",
   },
   {
@@ -390,6 +380,7 @@ const rawSunnies = [
     ],
     description:
       "Premium night vision sunglasses with gold metal frame and yellow-tinted lenses for enhanced night driving visibility",
+    archived: true,
   },
   {
     id: "oval-unisex",
@@ -403,19 +394,15 @@ const rawSunnies = [
     ],
     description:
       "Classic oval unisex sunglasses with tortoiseshell and dark brown acetate frames and dark polarized lenses",
+    archived: true,
   },
   {
     id: "photochromic",
     name: "Photochromic",
     price: 15.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/1ac343d284b4a0691cff1b858f965954.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/1ac343d284b4a0691cff1b858f965954.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7beb9c662ce58576bdd04b2ba0ea9caf.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/16f05d28100f90543bc3e58ec1d865c6.jpg",
-    ],
+    image: sI("Photochromic $15.00", "phtochromic.jpeg")[0],
+    images: sI("Photochromic $15.00", "phtochromic.jpeg", "Photochromic 2.jpeg", "Photochromic 3.jpeg"),
     description:
       "Advanced photochromic glasses with black metal frames. Lenses adapt to light conditions for optimal vision.",
   },
@@ -431,20 +418,15 @@ const rawSunnies = [
     ],
     description:
       "Premium polarized club master sunglasses with tortoiseshell and black acetate frames and gold metal accents.",
+    archived: true,
   },
   {
     id: "polarized-sunglasses",
     name: "Polarized Sunglasses",
     price: 20.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/f9626d3f9c7079fc4aa6472dde5c8d6e.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/f9626d3f9c7079fc4aa6472dde5c8d6e.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/69d2b2afee110e1daf551275d9a64678.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7452c3914b124b364bbb1468e0cf47d8.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/c27eb19b3a2dc2834385dabe3c8e679e.jpg",
-    ],
+    image: sI("polarized $20.00", "polarized .jpeg")[0],
+    images: sI("polarized $20.00", "polarized .jpeg", "polarized 2.jpeg", "polarized 3.jpeg", "women polarized.jpeg"),
     description:
       "Premium polarized sunglasses with black and tortoiseshell acetate frames, gold metal accents, and dark or brown polarized lenses.",
   },
@@ -460,6 +442,7 @@ const rawSunnies = [
     ],
     description:
       "Polarized photochromic glasses with black acetate frame and gold metal accents. Lenses adapt to light conditions.",
+    archived: true,
   },
   {
     id: "raddisom-polarized-magnetic",
@@ -473,18 +456,15 @@ const rawSunnies = [
     ],
     description:
       "Premium raddisom polarized anti-ultraviolet magnetic lens sunglasses. Multiple lens color options with green carrying case.",
+    archived: true,
   },
   {
     id: "rectangle-unisex",
     name: "Rectangle Unisex",
     price: 15.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/b282b65952499ada2d3ff73a223b6d32.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/b282b65952499ada2d3ff73a223b6d32.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/61ad3dbe11055e64f5a1e96a20aa2a7e.jpg",
-    ],
+    image: sI("rectangle unisex $15.00", "rectangle unisex.jpeg")[0],
+    images: sI("rectangle unisex $15.00", "rectangle unisex.jpeg", "rectangle unisex 2.jpeg"),
     description:
       "Rectangle unisex sunglasses with black acetate frames. Multiple lens colors: clear, yellow, dark, and blue-tinted.",
   },
@@ -493,12 +473,8 @@ const rawSunnies = [
     name: "Retro Square",
     price: 10.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/aba16ac4083cb88a572926767c8cdda8.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/aba16ac4083cb88a572926767c8cdda8.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/c16639264033f76afc21a241ff50d74f.jpg",
-    ],
+    image: sI("retro square $10.00", "retro square.jpeg")[0],
+    images: sI("retro square $10.00", "retro square.jpeg", "retro square 2.jpeg"),
     description: "Classic retro square sunglasses with polarized lenses",
   },
   {
@@ -506,12 +482,8 @@ const rawSunnies = [
     name: "Round Retro",
     price: 10.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/0ca27b4caf58c0f5f5143844714fc4ba.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/0ca27b4caf58c0f5f5143844714fc4ba.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/b8843e5f3fbad581359026da4f48b8c1.jpg",
-    ],
+    image: sI("round retro sunglasses $10.00", "round retro .jpeg")[0],
+    images: sI("round retro sunglasses $10.00", "round retro .jpeg", "round retro 2.jpeg"),
     description: "Vintage round retro sunglasses with gradient and polarized lens options",
   },
   {
@@ -519,16 +491,8 @@ const rawSunnies = [
     name: "Small Rectangle Men",
     price: 10.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/59985deafadccdcbda8ea07913ef30c4.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/59985deafadccdcbda8ea07913ef30c4.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/b248915cf14a6c7c9422bdfa4d871f4f.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7834a506d7d242c155f1e44a070e242f.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/701405f551126ec72f5db0dc4e350865.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/850373a3773814b4dba3dedad72acc17.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/03085894ccde95caa4830542d7b7b3b0.jpg",
-    ],
+    image: sI("small rectangle men $10.00", "small rectangle men.jpeg")[0],
+    images: sI("small rectangle men $10.00", "small rectangle men.jpeg", "small rectangle men 2.jpeg", "small rectangle men 3.jpeg", "small rectangle men 4.jpeg", "small rectangle men 5.jpeg", "small rectangle men 6.jpeg"),
     description: "Sleek small rectangle sunglasses for men with multiple lens tint options",
   },
   {
@@ -543,6 +507,7 @@ const rawSunnies = [
     ],
     description:
       "Elegant cateye sunglasses with black and brown tortoiseshell acetate frame and gold metal accents. Gradient brown lenses.",
+    archived: true,
   },
   {
     id: "stylish-round-female",
@@ -556,20 +521,15 @@ const rawSunnies = [
     ],
     description:
       "Chic round sunglasses with black metal frames. Available in dark purple, blue gradient, and brown gradient lenses.",
+    archived: true,
   },
   {
     id: "thick-square-retro",
     name: "Thick Square Retro",
     price: 10.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7f763b98ef16813880928426059fc02a.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7f763b98ef16813880928426059fc02a.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/14189bec437de93e44eb45e29dfcb271.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7c6511819f324af4cbb5ea65dc223c4e.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/4e39ab428dfe7c877004e6ec015ffab8.jpg",
-    ],
+    image: sI("Thick square retro $10.00", "thick square retro.jpeg")[0],
+    images: sI("Thick square retro $10.00", "thick square retro.jpeg", "thick square retro 2.jpeg", "thick square retro 3.jpeg", "thick square retro 4.jpeg"),
     description:
       "Bold retro-inspired square sunglasses with thick acetate frames. Multiple frame colors with dark polarized lenses.",
   },
@@ -578,13 +538,8 @@ const rawSunnies = [
     name: "Unisex Octagon",
     price: 15.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/dda0079a7f4f2319bffd71fc36a99946.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/dda0079a7f4f2319bffd71fc36a99946.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/1468be8e258cae0687018776367374f1.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/8e54fbb8b20c720ce5a6e23975faac55.jpg",
-    ],
+    image: sI("unisex octagon $15.00", "unisex octagon.jpeg")[0],
+    images: sI("unisex octagon $15.00", "unisex octagon.jpeg", "octagon unisex.jpeg", "octagon unisex 2.jpeg"),
     description:
       "Modern octagon-shaped sunglasses with black and gold metal frames. Dark polarized lenses for all genders.",
   },
@@ -593,12 +548,8 @@ const rawSunnies = [
     name: "Small Thick Retro Unisex",
     price: 10.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/9795e9e518bca2ee55a6e54475a88f92.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/9795e9e518bca2ee55a6e54475a88f92.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/2cd907002f133957979165e4071f5e99.jpg",
-    ],
+    image: sI("unisex small thick retro $10", "unisex small thick retro.jpeg")[0],
+    images: sI("unisex small thick retro $10", "unisex small thick retro.jpeg", "unisex small thick retro 2.jpeg"),
     description:
       "Classic retro style with thick acetate frames and gold metal accents. Light purple-tinted and dark polarized options.",
   },
@@ -607,14 +558,8 @@ const rawSunnies = [
     name: "Wooden Frame Sunglasses",
     price: 10.0,
     category: "sunnies",
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/ae06becdbd341ada84eed5ac7c5685c9.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/ae06becdbd341ada84eed5ac7c5685c9.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/67e8e1f3a15c51f4e621743aeee60895.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/d0a04a8eb84df11039f4b021d00c20be.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/5bd0aa13880a4741fc2978859f33967c.jpg",
-    ],
+    image: sI("wooden frame sunglasses $10.00", "wooden frame .jpeg")[0],
+    images: sI("wooden frame sunglasses $10.00", "wooden frame .jpeg", "wooden frame 2.jpeg", "wooden frame 3.jpeg", "wooden frame 4.jpeg"),
     description:
       "Eco-friendly wooden frame sunglasses with dark wood-grain arms and dark polarized lenses.",
   },
@@ -909,7 +854,9 @@ const rawSunnies = [
   },
 ];
 
-export const sunniesProducts: Product[] = rawSunnies.map((item, index) => ({
+const allSunniesProducts: Product[] = rawSunnies.map((item, index) => ({
+  // Every product must carry an explicit, descriptive slug — auto-numbered ids
+  // like `sun-7` produce keyword-free URLs that Google declines to index.
   id: (item as { id?: string }).id || `sun-${index + 1}`,
   name: item.name,
   price: item.price,
@@ -925,13 +872,14 @@ export const sunniesProducts: Product[] = rawSunnies.map((item, index) => ({
   category: (item as { category?: string }).category || "sunnies",
   tags: (item as { tags?: string[] }).tags || [],
   inStock: true,
+  archived: (item as { archived?: boolean }).archived,
 }));
 
-export const tinyTreasuresProducts: Product[] = [
+const allTinyTreasuresProducts: Product[] = [
   // ── Existing CDN products ──────────────────────────────────────────────────
   {
-    id: "tt-1",
-    name: "Hannah Martin",
+    id: "hannah-martin-watch",
+    name: "Hannah Martin Watch",
     price: 40.0,
     image:
       "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/9ded0a21ec91b483a19f3f9add492737.jpg",
@@ -945,18 +893,14 @@ export const tinyTreasuresProducts: Product[] = [
     frameVariations: [],
     tags: [],
     inStock: true,
+    archived: true,
   },
   {
-    id: "tt-2",
+    id: "heiheipi-ladies-watch",
     name: "Heiheipi Ladies Watch",
     price: 30.0,
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7090e660ecf343b82529a290fe4d16a1.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/7090e660ecf343b82529a290fe4d16a1.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/9d81ee50d3662e8ef04fba8913c3faa3.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/5192524f942840880cc43afe77d3c75b.jpg",
-    ],
+    image: ttI("Heiheipi ladies watch $30.00", "Heiheipi ladies watch $30.00.jpeg")[0],
+    images: ttI("Heiheipi ladies watch $30.00", "Heiheipi ladies watch $30.00.jpeg", "Heiheipi ladies watch 2 $30.00.jpeg", "Heiheipi ladies watch 3 $30.00.jpeg"),
     description: "Chic design crafted for the modern woman.",
     category: "tiny-treasures",
     variations: [],
@@ -965,19 +909,11 @@ export const tinyTreasuresProducts: Product[] = [
     inStock: true,
   },
   {
-    id: "tt-3",
+    id: "skmei-mens-watch",
     name: "SKMEI Men's Watch",
     price: 60.0,
-    image:
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/f1bf4b3d0d74df4124408fe08d21cb56.jpg",
-    images: [
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/f1bf4b3d0d74df4124408fe08d21cb56.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/e90f92efdf20740775eb433eb5fa2afc.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/c084413d80337c233ad6653c32e6109f.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/016ebf2455720512d2683e4cddbd3e12.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/3c45baeedf4bd6710b9ab71486f3a9a2.jpg",
-      "https://horizons-cdn.hostinger.com/e9f046c8-e722-47cb-941a-fae0ccba024f/4c5c7e46dc4a9619e27440da80a57d39.jpg",
-    ],
+    image: ttI("SKMEI Men's watch $60.00", "SKMEI Men's watch $60.00.jpeg")[0],
+    images: ttI("SKMEI Men's watch $60.00", "SKMEI Men's watch $60.00.jpeg", "SKMEI Men's watch 1 $60.00.jpeg", "SKMEI Men's watch 2 $60.00.jpeg", "SKMEI Men's watch 3 $60.00.jpeg", "SKMEI Men's watch 4 $60.00.jpeg", "SKMEI Men's watch 5 $60.00.jpeg", "SKMEI Men's watch 6 $60.00.jpeg"),
     description: "Bold aesthetics meeting precision engineering.",
     category: "tiny-treasures",
     variations: [],
@@ -1364,6 +1300,19 @@ export const tinyTreasuresProducts: Product[] = [
     inStock: true,
   },
   {
+    id: "tt-barsh-womens-watch",
+    name: "BARSH Women's Watch",
+    price: 20.0,
+    images: ttI("BARSH women's watch $20", "BARSH women's watch 1.png", "BARSH women's watch 2.png", "BARSH women's watch 3.png", "BARSH women's watch 4.png"),
+    image: ttI("BARSH women's watch $20", "BARSH women's watch 1.png")[0],
+    description: "BARSH women's watch in four dial and strap combinations — a slim, everyday timepiece that dresses up or down.",
+    category: "tiny-treasures",
+    variations: [],
+    frameVariations: [],
+    tags: [],
+    inStock: true,
+  },
+  {
     id: "tt-stainless-bracelets",
     name: "Stainless Steel Bracelets",
     price: 10.0,
@@ -1378,9 +1327,20 @@ export const tinyTreasuresProducts: Product[] = [
   },
 ];
 
+const isLive = (product: Product) => !product.archived;
+
+/** Products shown on the site, in listings, in the sitemap and in schema. */
+export const sunniesProducts: Product[] = allSunniesProducts.filter(isLive);
+export const tinyTreasuresProducts: Product[] = allTinyTreasuresProducts.filter(isLive);
+
 export const getAllProducts = (): Product[] => [
   ...sunniesProducts,
   ...tinyTreasuresProducts,
 ];
+
+/** Archived products, used only to build the legacy-URL redirect table. */
+export const getArchivedProducts = (): Product[] =>
+  [...allSunniesProducts, ...allTinyTreasuresProducts].filter((p) => p.archived);
+
 export const getProductById = (id: string): Product | undefined =>
   getAllProducts().find((p) => p.id === id);
