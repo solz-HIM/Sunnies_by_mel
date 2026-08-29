@@ -80,23 +80,44 @@ export default function SiteSchema() {
           closes: slot.closes,
         })),
         sameAs: [...SITE.social],
-        makesOffer: [
-          {
-            "@type": "Offer",
-            itemOffered: { "@type": "Product", name: "Polarized sunglasses" },
-          },
-          {
-            "@type": "Offer",
-            itemOffered: { "@type": "Product", name: "Anti-blue-light glasses" },
-          },
-          {
-            "@type": "Offer",
-            itemOffered: { "@type": "Product", name: "Photochromic sunglasses" },
-          },
-          {
-            "@type": "Offer",
-            itemOffered: { "@type": "Product", name: "Non-tarnish jewellery" },
-          },
+        /**
+         * The store's range, described WITHOUT emitting `Product` nodes.
+         *
+         * This previously used `makesOffer` with four bare
+         * `{ "@type": "Product", name }` objects. Because this graph renders
+         * from the root layout, those four appeared on every page of the site,
+         * and Google's Product rich-result parser treats any `Product`-typed
+         * node as a candidate — so all four were reported in Search Console as
+         * "missing offers, review or aggregateRating" on every URL it crawled.
+         *
+         * These are merchandise categories, not purchasable items: they have no
+         * single price, SKU or stock state, so there is nothing honest to put in
+         * an `offers` block for them. `OfferCatalog` (an ItemList subtype)
+         * carries the same "what we sell" signal, links the category pages, and
+         * emits no Product nodes. Real Product markup belongs on — and lives
+         * on — the individual product pages.
+         */
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Sunnies by Mel product range",
+          itemListElement: [
+            {
+              "@type": "OfferCatalog",
+              name: "Sunglasses — polarized, photochromic and anti-blue-light",
+              url: abs("/sunnies"),
+            },
+            {
+              "@type": "OfferCatalog",
+              name: "Tiny Treasures — non-tarnish jewellery, watches and accessories",
+              url: abs("/tiny-treasures"),
+            },
+          ],
+        },
+        knowsAbout: [
+          "Polarized sunglasses",
+          "Anti-blue-light glasses",
+          "Photochromic sunglasses",
+          "Non-tarnish jewellery",
         ],
       },
       {
