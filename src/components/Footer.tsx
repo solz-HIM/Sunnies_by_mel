@@ -146,10 +146,10 @@ export default function Footer() {
               Sat 9:00am–1:00pm
             </p>
             <Link
-              href="/#visit"
+              href="/visit-us"
               className="mt-4 inline-block text-sm font-medium text-primary hover:underline"
             >
-              See us on the map →
+              Directions &amp; opening hours →
             </Link>
           </div>
         </div>

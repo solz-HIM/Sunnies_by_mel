@@ -90,7 +90,7 @@ const nextConfig: NextConfig = {
       // Explicitly permit indexing and large image previews on the indexable
       // routes, so a stray host-level X-Robots-Tag can never quietly deindex
       // the catalogue. /cart is deliberately excluded — it is noindex.
-      ...["/", "/sunnies", "/tiny-treasures", "/privacy", "/terms", "/product/:id"].map(
+      ...["/", "/sunnies", "/tiny-treasures", "/visit-us", "/privacy", "/terms", "/product/:id"].map(
         (source) => ({
           source,
           headers: [

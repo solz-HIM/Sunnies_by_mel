@@ -12,7 +12,7 @@ const navLinks = [
   { path: "/", label: "Home" },
   { path: "/sunnies", label: "Sunglasses" },
   { path: "/tiny-treasures", label: "Jewellery" },
-  { path: "/#visit", label: "Visit us" },
+  { path: "/visit-us", label: "Visit us" },
 ];
 
 export default function Header() {

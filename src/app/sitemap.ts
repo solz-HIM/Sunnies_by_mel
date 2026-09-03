@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: SITE.url, lastModified: now, priority: 1, changeFrequency: "weekly" },
     { url: abs("/sunnies"), lastModified: now, priority: 0.9, changeFrequency: "weekly" },
     { url: abs("/tiny-treasures"), lastModified: now, priority: 0.9, changeFrequency: "weekly" },
+    { url: abs("/visit-us"), lastModified: now, priority: 0.9, changeFrequency: "monthly" },
     { url: abs("/privacy"), lastModified: now, priority: 0.2, changeFrequency: "yearly" },
     { url: abs("/terms"), lastModified: now, priority: 0.2, changeFrequency: "yearly" },
   ];

@@ -56,6 +56,7 @@ watch straps, leather wallets and glasses cases.
 ## Main pages
 
 - [Home — sunglasses & jewellery store in Harare](${SITE.url})
+- [Visit us — address, opening hours and directions](${abs("/visit-us")}): how to find the Belgravia shop, what is in stock, payment and delivery.
 - [Sunnies — sunglasses catalogue](${abs("/sunnies")}): all ${sunniesProducts.length} frames, with a lens buying guide and FAQs.
 - [Tiny Treasures — jewellery catalogue](${abs("/tiny-treasures")}): all ${tinyTreasuresProducts.length} jewellery and accessory pieces.
 - [Privacy policy](${abs("/privacy")})
