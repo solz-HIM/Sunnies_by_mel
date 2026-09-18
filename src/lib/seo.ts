@@ -40,6 +40,25 @@ export const SITE = {
   ],
 } as const;
 
+/**
+ * When the site's content genuinely last changed, as plain `YYYY-MM-DD`.
+ *
+ * These feed `<lastmod>` in the sitemap. They are deliberately hand-maintained
+ * constants rather than `new Date()` at build time: a build-time stamp marks
+ * every URL as freshly modified on every deploy, including deploys that only
+ * touched CSS. Google discounts `lastmod` once it learns a site's values are
+ * unreliable, so a slightly stale but truthful date is worth more than an
+ * always-current false one.
+ *
+ * Bump CATALOGUE when products, prices or product copy change; PAGES when the
+ * homepage, category or location copy changes; LEGAL when the policies change.
+ */
+export const CONTENT_UPDATED = {
+  catalogue: "2026-09-18",
+  pages: "2026-09-18",
+  legal: "2026-06-01",
+} as const;
+
 export const OG_IMAGE = {
   url: `${SITE.url}/og-image.png`,
   width: 1200,
